@@ -19,7 +19,7 @@ struct MetaOpts {
     #[darling(multiple)]
     from: Vec<Path>,
     #[darling(multiple)]
-    remote_from: Vec<Path>,
+    from_on: Vec<Path>,
 }
 
 #[derive(Debug, Default, Clone, FromAttributes)]
@@ -130,7 +130,7 @@ impl DeriveIntoContext {
         let name = &self.name;
         let is_from = !self.attrs.from.is_empty();
         let is_into = !self.attrs.into.is_empty();
-        let is_remote_from = !self.attrs.remote_from.is_empty();
+        let is_from_on = !self.attrs.from_on.is_empty();
 
         let from_code = if is_from {
             TokenStream::from_iter(self.attrs.from.iter().map(|from| {
@@ -186,8 +186,8 @@ impl DeriveIntoContext {
         } else {
             quote!()
         };
-        let remote_from_code = if is_remote_from {
-            TokenStream::from_iter(self.attrs.remote_from.iter().map(|remote| {
+        let from_on_code = if is_from_on {
+            TokenStream::from_iter(self.attrs.from_on.iter().map(|remote| {
                 let struct_name = Ident::new(&format!("{}", name), name.span());
                 let target_name = remote;
                 let assigns = self.gen_into_assigns(remote.to_token_stream().to_string());
@@ -217,7 +217,7 @@ impl DeriveIntoContext {
         quote!(
             #from_code
             #into_code
-            #remote_from_code
+            #from_on_code
         )
     }
 

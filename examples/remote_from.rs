@@ -1,7 +1,7 @@
 use struct_convert::Convert;
 
 #[derive(Convert)]
-#[convert(remote_from = "remote::B")]
+#[convert(from_on = "remote::B")]
 pub struct A {
     i: i64,
 }
